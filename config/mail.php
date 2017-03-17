@@ -39,10 +39,12 @@ return [
     | This is the SMTP port used by your application to deliver e-mails to
     | users of the application. Like the host we have set this value to
     | stay compatible with the Mailgun e-mail application by default.
-    |
+    | 默认值是 25，
+    | SSL端口 465
+    | TLS端口 587
     */
 
-    'port' => env('MAIL_PORT', 587),
+	'port' => env('MAIL_PORT', 25),
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +73,8 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    // encryption 加密类型，可以设置为null表示不使用任何加密，也可以设置为tls/ssl。
+    'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,8 +87,10 @@ return [
     |
     */
 
+    // 邮箱账号
     'username' => env('MAIL_USERNAME'),
 
+	// 上述邮箱登录对应登录密码
     'password' => env('MAIL_PASSWORD'),
 
     /*
