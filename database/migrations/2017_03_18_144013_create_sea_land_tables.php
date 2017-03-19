@@ -19,7 +19,7 @@ class CreateSeaLandTables extends Migration {
 			$table->integer('member_id')->default(0);			// 会员ID
 			$table->string('activation_token')->nullable();		// 激活令牌,允许空
 			$table->boolean('activated')->default(false);		// 是否激活,default: false
-			$table->softDeletes();								// 是否删除,default: false
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
 			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
 			$table->integer('last_updated_by')->default(0);		// 最后更新人
 			$table->string('last_updated_type', 2);				// 最后更新人的类型,[01: 用户, 02: 管理员]
@@ -27,19 +27,61 @@ class CreateSeaLandTables extends Migration {
 
 		// 新闻
 		Schema::create('news', function (Blueprint $table) {
-
+			$table->increments('id');
+			$table->string('subject');
+			$table->text('content');
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
+			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
+			$table->integer('created_by')->default(0);			// 创建人
+			$table->integer('last_updated_by')->default(0);		// 最后更新人
+			$table->timestamps();
 		});
 
 		// 培训类型
-
+		Schema::create('training_type', function (Blueprint $table) {
+			$table->increments('id');
+			$table->string('type_name');			// 分类名称
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
+			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
+			$table->integer('created_by')->default(0);			// 创建人
+			$table->integer('last_updated_by')->default(0);		// 最后更新人
+			$table->timestamps();
+		});
 
 		// 培训课程
+		Schema::create('training', function (Blueprint $table) {
+			$table->increments('id');
+			$table->integer('training_type_id');	// 分类ID
+			$table->string('name', 128);			// 课程名称
+			$table->timestamp('start_date')->nullable();		// 开始时间
+			$table->timestamp('end_date')->nullable();			// 结束时间
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
+			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
+			$table->integer('created_by')->default(0);			// 创建人
+			$table->integer('last_updated_by')->default(0);		// 最后更新人
+			$table->timestamps();
+		});
+
+		// 会员培训申请 Register for a Course
+		Schema::create('register_course', function (Blueprint $table) {
+			$table->increments('id');
+			$table->integer('training_id');
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
+			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
+			$table->integer('created_by')->default(0);			// 创建人
+			$table->integer('last_updated_by')->default(0);		// 最后更新人
+			$table->timestamps();
+		});
 
 		// 认证
+		Schema::create('certification', function (Blueprint $table) {
 
-		// 会员认证
+		});
 
-		// 会员培训
+		// 会员认证/续订认证
+		Schema::create('renew_certification', function (Blueprint $table) {
+
+		});
 
 		// 会员
 		Schema::create('members', function (Blueprint $table) {
@@ -75,21 +117,30 @@ class CreateSeaLandTables extends Migration {
 			$table->string('mailing_name', 128)->nullable();	// 收件人
 			$table->string('mailing_mobile', 32)->nullable();	// 收件人电话
 			$table->string('certification_id')->nullable();		// 认证
-			$table->softDeletes();
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
+			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
+			$table->integer('created_by')->default(0);			// 创建人
+			$table->integer('last_updated_by')->default(0);		// 最后更新人
 			$table->timestamps();
 		});
 
 		// 会员资格
 		Schema::create('membership', function (Blueprint $table){
 			$table->increments('id');
-			$table->integer('member_id');
-			$table->timestamp('start_date');
-			$table->timestamp('expiry_date');
+			$table->integer('member_id')->default(0);
+			$table->timestamp('start_date')->nullable();
+			$table->timestamp('expiry_date')->nullable();
+			$table->boolean('deleted')->default(false);			// 是否删除,default: false
 			$table->string('state', 2);
+			$table->integer('created_by')->default(0);			// 创建人
+			$table->integer('last_updated_by')->default(0);		// 最后更新人
 			$table->timestamps();
 		});
 
 		// 产品
+		Schema::create('product', function (Blueprint $table) {
+
+		});
 	}
 
 	/**
@@ -102,10 +153,21 @@ class CreateSeaLandTables extends Migration {
 			$table->dropColumn('member_id');
 			$table->dropColumn('activation_token');
 			$table->dropColumn('activated');
-			// $table->dropColumn('is_deleted');
-			$table->dropColumn('is_valid');
+			$table->dropColumn('deleted');
+			$table->dropColumn('state');
 			$table->dropColumn('last_updated_by');
 			$table->dropColumn('last_updated_type');
 		});
+
+		// Schema::dropIfExists('users');
+		Schema::dropIfExists('news');
+		Schema::dropIfExists('training_type');
+		Schema::dropIfExists('training');
+		Schema::dropIfExists('register_course');
+		Schema::dropIfExists('certification');
+		Schema::dropIfExists('renew_certification');
+		Schema::dropIfExists('members');
+		Schema::dropIfExists('membership');
+		Schema::dropIfExists('product');
 	}
 }
