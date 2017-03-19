@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\MailTest;
-use App\Mail\MailTest4IMG;
 use App\Mail\MailTestMarkdown;
-use Illuminate\Http\Request;
 use Mail;
 
 

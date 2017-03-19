@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateSeaLandTables
+ */
 class CreateSeaLandTables extends Migration {
 	/**
 	 * Run the migrations.
@@ -17,26 +20,34 @@ class CreateSeaLandTables extends Migration {
 			$table->string('activation_token')->nullable();		// 激活令牌,允许空
 			$table->boolean('activated')->default(false);		// 是否激活,default: false
 			$table->softDeletes();								// 是否删除,default: false
-			$table->boolean('is_valid')->default(true);			// 是否有效,default: true
+			$table->string('state', 2)->default('01');			// 状态,[01: 有效, 02: 禁用]
 			$table->integer('last_updated_by')->default(0);		// 最后更新人
-			$table->string('last_updated_type');				// 最后更新人的类型,[01: 用户, 02: 管理员]
+			$table->string('last_updated_type', 2);				// 最后更新人的类型,[01: 用户, 02: 管理员]
 		});
 
 		// 新闻
+		Schema::create('news', function (Blueprint $table) {
 
-		// 培训
+		});
+
+		// 培训类型
+
+
+		// 培训课程
 
 		// 认证
 
+		// 会员认证
+
+		// 会员培训
+
 		// 会员
-		Schema::create('Members', function (Blueprint $table) {
+		Schema::create('members', function (Blueprint $table) {
 			$table->bigIncrements('id');				// 会员ID
 			$table->string('member_number', 128);		// 档案编号
 			$table->string('name', 128);				// 名称
 			$table->string('en_name')->nullable();		// 英文名
 			$table->string('sex', 6);
-			$table->timestamp('valid_on');				// 续费会员 开始日期
-			$table->timestamp('invalid_on');			// 续费会员 结束日期
 			$table->string('email', 64)->nullable();		// 邮箱
 			$table->string('oth_email', 64)->nullable();	// 其他邮箱
 			$table->string('mobile_phone', 64)->nullable();	// 手机号码
@@ -65,6 +76,16 @@ class CreateSeaLandTables extends Migration {
 			$table->string('mailing_mobile', 32)->nullable();	// 收件人电话
 			$table->string('certification_id')->nullable();		// 认证
 			$table->softDeletes();
+			$table->timestamps();
+		});
+
+		// 会员资格
+		Schema::create('membership', function (Blueprint $table){
+			$table->increments('id');
+			$table->integer('member_id');
+			$table->timestamp('start_date');
+			$table->timestamp('expiry_date');
+			$table->string('state', 2);
 			$table->timestamps();
 		});
 
