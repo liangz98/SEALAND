@@ -47,7 +47,7 @@ class MailController extends Controller {
 					 'files/test2.txt',
 					 'files/testimg.jpg',
 				 ],
-		];
+        ];
 		Mail::to('liangz98@foxmail.com')->send(new MailTestMarkdown($data));
 
 		echo "Markdown Email Sent success! Check your inbox.";

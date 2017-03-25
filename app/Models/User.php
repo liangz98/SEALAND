@@ -37,7 +37,8 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     *
+     * fillable 相当于批量修改数据的白名单
+     * guarded 相当于黑名单
      * @var array
      */
     protected $fillable = [
